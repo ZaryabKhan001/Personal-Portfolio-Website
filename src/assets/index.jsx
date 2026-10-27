@@ -1,21 +1,13 @@
 import {
-  FaXTwitter,
   FaGithub,
   FaLinkedin,
-  FaFacebook,
-  FaDiscord,
-  FaInstagram,
+  FaX,
 } from "react-icons/fa6";
-
-import projectImage1 from "../assets/project1.jpeg";
-import projectImage2 from "../assets/project2.jpeg";
-import projectImage3 from "../assets/project3.jpeg";
 
 import { RiReactjsLine } from "react-icons/ri";
 import { FaHtml5 } from "react-icons/fa6";
 import { IoLogoCss3 } from "react-icons/io";
 import { IoLogoJavascript } from "react-icons/io5";
-import { BiLogoPostgresql } from "react-icons/bi";
 import { MdAnimation } from "react-icons/md";
 import { IoLogoFirebase } from "react-icons/io5";
 import { SiDrizzle } from "react-icons/si";
@@ -33,45 +25,16 @@ export const HERO = {
   name: "Zaryab Zubair",
   greet: "Hello there! 👋🏻",
   description:
-    "I'm a passionate frontend developer skilled in modern web technologies like HTML, CSS, JavaScript, React, and animation libraries. I love building full-stack projects that deliver smooth and responsive user experiences.",
+    "I turn complex problems into practical, user-focused solutions. Passionate about building products that scale, writing maintainable code, and turning ideas into reality. Always learning, continuously improving, and exploring how AI can shape the next generation of software.",
 };
 
-export const PROJECTS = [
-  {
-    id: 1,
-    name: "Fullstack Car Marketplace",
-    description:
-      "A full-stack car marketplace built with React, TailwindCSS, Drizzle ORM, and Clerk for authentication. Features include car search, category-based browsing, car listing, and messaging via SendBird.",
-    image: projectImage1,
-    githubLink: "https://github.com/ZaryabKhan420/car-marketplace",
-    LiveLink: "https://zaryab-car-marketplace.netlify.app/",
-  },
-  {
-    id: 2,
-    name: "AI Resume Builder",
-    description:
-      "An AI-powered resume builder that allows users to create, edit, and share resumes. Built with React, TailwindCSS, and Strapi backend with PostgreSQL, utilizing the Gemini API for resume content generation.",
-    image: projectImage2,
-    githubLink: "https://github.com/ZaryabKhan420/ai-resume-builder",
-    LiveLink: "https://github.com/ZaryabKhan420/ai-resume-builder-strapi-admin",
-  },
-  {
-    id: 3,
-    name: "AI Personal Expense Tracker",
-    description:
-      "A full-stack expense tracker with AI capabilities. Features include income management, budget creation, and expense tracking, using React for the frontend and Neon/PostgreSQL for the backend.",
-    image: projectImage3,
-    githubLink: "https://github.com/ZaryabKhan420/AI-Expense-Tracker",
-    LiveLink: "https://zaryab-ai-expense-tracker.netlify.app/",
-  },
-];
 
 export const BIO = [
-  `I am a passionate frontend developer from Gujrat, Punjab, Pakistan, with a Bachelor’s degree in Information Technology from the University of Gujrat. I specialize in creating engaging, dynamic, and visually appealing web applications using a wide range of web technologies. With expertise in HTML, CSS, JavaScript, React, GSAP, AOS animation, and Redux, I am able to bring innovative ideas to life, focusing on creating seamless and interactive user experiences.
+  `I'm a Software Engineer with hands-on experience building and maintaining full-stack applications, turning product requirements into reliable, practical solutions. I care about more than getting features to work — I focus on understanding the problem, making thoughtful engineering decisions, and writing code that's easier to maintain and extend.`,
 
-Throughout my career, I have worked on several full-stack projects, showcasing my ability to handle both frontend and backend development. Some of my notable projects include a car marketplace that allows users to buy and sell cars with features like login authentication, car search, and chat messaging; an AI-powered resume builder that enables users to generate, update, and share resumes; and a personal expense tracker with budget management and expense tracking features.
+  `My work spans the development lifecycle, from translating requirements into working features to integrating APIs, handling application logic, and solving real-world technical challenges. I've contributed to products ranging from marketplaces and productivity tools to AI-powered applications, gaining a practical understanding of how software serves both users and business goals.`,
 
-I am driven by a passion for transforming ideas into functional and user-friendly web experiences, constantly seeking new challenges and opportunities to expand my skills.`,
+  `I'm continuously strengthening my foundations in software design, system architecture, and problem-solving while exploring how AI can make software more useful and capable. I value ownership, clear communication, and continuous improvement, and I'm motivated by opportunities to work on meaningful products alongside engineers who care about building things well.`
 ];
 
 export const SKILLS = [
@@ -155,11 +118,15 @@ export const EDUCATION = [
 
 export const SOCIAL_MEDIA_LINKS = [
   {
-    href: "https://github.com/ZaryabKhan420",
+    href: "https://github.com/ZaryabKhan001",
     icon: <FaGithub fontSize={25} className="hover:opacity-80" />,
   },
   {
     href: "https://www.linkedin.com/in/zaryab-zubair/",
     icon: <FaLinkedin fontSize={25} className="hover:opacity-80" />,
+  },
+  {
+    href: "https://x.com/Zaryab_005",
+    icon: <FaX fontSize={20} className="hover:opacity-80" />,
   },
 ];
