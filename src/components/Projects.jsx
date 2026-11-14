@@ -1,5 +1,11 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useRef, useState } from "react";
+import {
+  gsap,
+  ScrollTrigger,
+  useGSAP,
+  prefersReducedMotion,
+} from "../lib/gsap";
+import { useMotion } from "../lib/motion";
 import {
   FiArrowUpRight,
   FiChevronDown,
@@ -8,11 +14,11 @@ import {
   FiLayers,
   FiX,
 } from "react-icons/fi";
-import project01 from "../assets/project01.png";
-import project02 from "../assets/project02.png";
-import project03 from "../assets/project03.png";
-import project04 from "../assets/project04.png";
-import project05 from "../assets/project05.png";
+import project01 from "../assets/project01.webp";
+import project02 from "../assets/project02.webp";
+import project03 from "../assets/project03.webp";
+import project04 from "../assets/project04.webp";
+import project05 from "../assets/project05.webp";
 
 const projects = [
   {
@@ -167,27 +173,32 @@ function ProjectImage({ project }) {
   const [imageFailed, setImageFailed] = useState(false);
 
   return (
-    <div className="group relative min-h-56 overflow-hidden bg-gradient-to-br from-slate-800 via-slate-900 to-black md:min-h-full">
-      {!imageFailed ? (
-        <img
-          src={project.image}
-          alt={`${project.title} preview`}
-          loading="lazy"
-          onError={() => setImageFailed(true)}
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-      ) : (
-        <div className="absolute inset-0 flex flex-col justify-end bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-cyan-400/20 via-slate-900 to-black p-6">
-          <span className="absolute right-5 top-3 text-8xl font-bold tracking-tighter text-white/10">
-            {project.number}
-          </span>
-          <project.icon className="mb-4 h-8 w-8 text-cyan-300" />
-          <p className="text-xl font-semibold text-white">{project.title}</p>
-          <p className="mt-2 text-xs text-gray-400">
-            Add your project screenshot
-          </p>
-        </div>
-      )}
+    <div
+      data-project-media
+      className="group relative min-h-56 overflow-hidden bg-gradient-to-br from-slate-800 via-slate-900 to-black md:min-h-full"
+    >
+      <div data-project-zoom className="absolute inset-0">
+        {!imageFailed ? (
+          <img
+            src={project.image}
+            alt={`${project.title} preview`}
+            loading="lazy"
+            onError={() => setImageFailed(true)}
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+        ) : (
+          <div className="absolute inset-0 flex flex-col justify-end bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-cyan-400/20 via-slate-900 to-black p-6">
+            <span className="absolute right-5 top-3 text-8xl font-bold tracking-tighter text-white/10">
+              {project.number}
+            </span>
+            <project.icon className="mb-4 h-8 w-8 text-cyan-300" />
+            <p className="text-xl font-semibold text-white">{project.title}</p>
+            <p className="mt-2 text-xs text-gray-400">
+              Add your project screenshot
+            </p>
+          </div>
+        )}
+      </div>
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10" />
 
@@ -200,191 +211,333 @@ function ProjectImage({ project }) {
 
 function ProjectCard({ project, featured = false }) {
   const [expanded, setExpanded] = useState(false);
+  const panelRef = useRef(null);
+
+  // Expand / collapse the case study. Runs on mount too (a no-op at height 0).
+  useGSAP(
+    () => {
+      gsap.to(panelRef.current, {
+        height: expanded ? "auto" : 0,
+        autoAlpha: expanded ? 1 : 0,
+        duration: prefersReducedMotion() ? 0 : 0.5,
+        ease: "power3.inOut",
+        overwrite: true,
+        onComplete: () => ScrollTrigger.refresh(),
+      });
+    },
+    { dependencies: [expanded] },
+  );
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.1 }}
-      transition={{ duration: 0.45 }}
-      className={`overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025] transition-colors duration-300 hover:border-cyan-300/30 ${
-        featured ? "grid md:grid-cols-2" : "flex flex-col"
-      }`}
-    >
-      <div className={featured ? "min-h-72" : "aspect-[16/10]"}>
-        <ProjectImage project={project} />
-      </div>
-
-      <div className={`flex flex-col p-5 sm:p-7 ${featured ? "lg:p-9" : ""}`}>
-        <div className="mb-5 flex items-center justify-between gap-3">
-          <span className="text-xs font-medium tracking-[0.16em] text-gray-500">
-            PROJECT {project.number} / 05
-          </span>
-          {featured && (
-            <span className="rounded-full border border-white/10 px-2.5 py-1 text-[10px] text-gray-400">
-              PROFESSIONAL EXPERIENCE
-            </span>
-          )}
+    // Outer wrapper takes the scroll-driven 3D entrance; the article itself
+    // takes the hover tilt, so the two never fight over the same transform.
+    <div data-card-3d className="h-full">
+      <article
+        data-tilt
+        className={`relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025] transition-colors duration-300 hover:border-cyan-300/30 ${
+          featured ? "grid md:grid-cols-2" : "flex flex-col"
+        }`}
+      >
+        <div className={featured ? "min-h-72" : "aspect-[16/10]"}>
+          <ProjectImage project={project} />
         </div>
 
-        <h3
-          className={`font-semibold tracking-tight text-white ${
-            featured ? "text-2xl sm:text-3xl" : "text-xl"
-          }`}
-        >
-          {project.title}
-        </h3>
-
-        <p className="mt-2 text-sm leading-6 text-cyan-300">
-          {project.subtitle}
-        </p>
-
-        <p className="mt-4 text-sm leading-7 text-gray-400">
-          {project.description}
-        </p>
-
-        <ul className="mt-5 space-y-3">
-          {project.highlights.slice(0, featured ? 3 : 2).map((highlight) => (
-            <li
-              key={highlight}
-              className="flex items-start gap-3 text-sm leading-6 text-gray-300"
-            >
-              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />
-              <span>{highlight}</span>
-            </li>
-          ))}
-        </ul>
-
-        <div className="mt-6 flex flex-wrap gap-2">
-          {project.technologies.slice(0, featured ? 5 : 3).map((technology) => (
-            <span
-              key={technology}
-              className="rounded-md border border-white/10 bg-white/[0.03] px-2.5 py-1.5 text-xs text-gray-400"
-            >
-              {technology}
+        <div className={`flex flex-col p-5 sm:p-7 ${featured ? "lg:p-9" : ""}`}>
+          <div className="mb-5 flex items-center justify-between gap-3">
+            <span className="text-xs font-medium tracking-[0.16em] text-gray-500">
+              PROJECT {project.number} / 05
             </span>
-          ))}
-        </div>
-
-        <div className="mt-7 border-t border-white/10 pt-5">
-          <button
-            type="button"
-            onClick={() => setExpanded(!expanded)}
-            aria-expanded={expanded}
-            className="inline-flex items-center gap-2 text-sm font-medium text-cyan-300 transition-colors hover:text-cyan-100"
-          >
-            {expanded ? "Close case study" : "Explore the case study"}
-            {expanded ? (
-              <FiChevronDown className="rotate-180 transition-transform" />
-            ) : (
-              <FiArrowUpRight />
+            {featured && (
+              <span className="rounded-full border border-white/10 px-2.5 py-1 text-[10px] text-gray-400">
+                PROFESSIONAL EXPERIENCE
+              </span>
             )}
-          </button>
-        </div>
-      </div>
+          </div>
 
-      <AnimatePresence initial={false}>
-        {expanded && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="col-span-full overflow-hidden border-t border-white/10 bg-black/20"
+          <h3
+            className={`font-semibold tracking-tight text-white ${
+              featured ? "text-2xl sm:text-3xl" : "text-xl"
+            }`}
           >
-            <div className="grid gap-7 p-5 sm:p-7 md:grid-cols-2 lg:p-9">
-              <div className="md:col-span-2">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-cyan-300">
-                  The work
-                </p>
-                <p className="text-sm leading-7 text-gray-400">
-                  {project.overview}
-                </p>
-              </div>
+            {project.title}
+          </h3>
 
-              <div className="md:col-span-2">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-cyan-300">
-                  My contributions
-                </p>
-                <ul className="space-y-2">
-                  {project.contributions.map((contribution) => (
-                    <li
-                      key={contribution}
-                      className="flex gap-3 text-sm leading-6 text-gray-400"
-                    >
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />
-                      {contribution}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+          <p className="mt-2 text-sm leading-6 text-cyan-300">
+            {project.subtitle}
+          </p>
 
-              {project.engineeringFocus && (
-                <div className="md:col-span-2">
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-cyan-300">
-                    Engineering focus
-                  </p>
-                  <p className="text-sm leading-7 text-gray-400">
-                    {project.engineeringFocus}
-                  </p>
-                </div>
+          <p className="mt-4 text-sm leading-7 text-gray-400">
+            {project.description}
+          </p>
+
+          <ul className="mt-5 space-y-3">
+            {project.highlights.slice(0, featured ? 3 : 2).map((highlight) => (
+              <li
+                key={highlight}
+                className="flex items-start gap-3 text-sm leading-6 text-gray-300"
+              >
+                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />
+                <span>{highlight}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-6 flex flex-wrap gap-2">
+            {project.technologies
+              .slice(0, featured ? 5 : 3)
+              .map((technology) => (
+                <span
+                  key={technology}
+                  className="rounded-md border border-white/10 bg-white/[0.03] px-2.5 py-1.5 text-xs text-gray-400"
+                >
+                  {technology}
+                </span>
+              ))}
+          </div>
+
+          <div className="mt-7 border-t border-white/10 pt-5">
+            <button
+              type="button"
+              onClick={() => setExpanded(!expanded)}
+              aria-expanded={expanded}
+              aria-controls={`case-study-${project.number}`}
+              className="inline-flex items-center gap-2 text-sm font-medium text-cyan-300 transition-colors hover:text-cyan-100"
+            >
+              {expanded ? "Close case study" : "Explore the case study"}
+              {expanded ? (
+                <FiChevronDown className="rotate-180 transition-transform" />
+              ) : (
+                <FiArrowUpRight />
               )}
+            </button>
+          </div>
+        </div>
 
-              <p className="text-xs leading-5 text-gray-600 md:col-span-2">
-                Professional project details are limited to information that can
-                be shared publicly.
+        <div
+          ref={panelRef}
+          id={`case-study-${project.number}`}
+          style={{ height: 0, opacity: 0, visibility: "hidden" }}
+          className="col-span-full overflow-hidden bg-black/20"
+        >
+          <div className="grid gap-7 border-t border-white/10 p-5 sm:p-7 md:grid-cols-2 lg:p-9">
+            <div className="md:col-span-2">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-cyan-300">
+                The work
+              </p>
+              <p className="text-sm leading-7 text-gray-400">
+                {project.overview}
               </p>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.article>
+
+            <div className="md:col-span-2">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-cyan-300">
+                My contributions
+              </p>
+              <ul className="space-y-2">
+                {project.contributions.map((contribution) => (
+                  <li
+                    key={contribution}
+                    className="flex gap-3 text-sm leading-6 text-gray-400"
+                  >
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />
+                    {contribution}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {project.engineeringFocus && (
+              <div className="md:col-span-2">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-cyan-300">
+                  Engineering focus
+                </p>
+                <p className="text-sm leading-7 text-gray-400">
+                  {project.engineeringFocus}
+                </p>
+              </div>
+            )}
+
+            <p className="text-xs leading-5 text-gray-600 md:col-span-2">
+              Professional project details are limited to information that can
+              be shared publicly.
+            </p>
+          </div>
+        </div>
+        {/* Cursor spotlight (positioned via --mx / --my on hover) */}
+        <div
+          data-spotlight
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-500"
+          style={{
+            background:
+              "radial-gradient(520px circle at var(--mx, 50%) var(--my, 50%), rgba(34, 211, 238, 0.13), transparent 45%)",
+          }}
+        />
+      </article>
+    </div>
   );
 }
 
 export default function Projects() {
+  const scope = useRef(null);
+
+  useMotion(scope, (root, { desktop }) => {
+    const q = gsap.utils.selector(root);
+
+    // ✦ Cards rise out of the floor: tipped back in 3D, they straighten as
+    // they scroll into view while the screenshot settles from a slight zoom.
+    // The picture is visible the whole way (no clip/wipe that could leave an
+    // empty card). Scrubbed, so it reverses on the way back up.
+    q("[data-card-3d]").forEach((card, i) => {
+      const featured = card.querySelector("[data-tilt].grid");
+      const zoom = card.querySelector("[data-project-zoom]");
+
+      const tl = gsap.timeline({
+        defaults: { ease: "power2.out" },
+        scrollTrigger: {
+          trigger: card,
+          start: "top bottom",
+          end: featured ? "top 55%" : "top 65%",
+          scrub: 0.6,
+        },
+      });
+
+      tl.fromTo(
+        card,
+        {
+          rotationX: featured ? 28 : 38,
+          rotationZ: featured ? 0 : i % 2 ? 3 : -3,
+          y: 140,
+          scale: 0.86,
+          transformPerspective: 1400,
+          transformOrigin: "50% 100%",
+        },
+        { rotationX: 0, rotationZ: 0, y: 0, scale: 1, duration: 1 },
+        0,
+      )
+        // Fade in quickly at the start so the card is never a faint ghost.
+        .fromTo(
+          card,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.3, ease: "none" },
+          0,
+        )
+        .fromTo(zoom, { scale: 1.25 }, { scale: 1, duration: 1 }, 0);
+    });
+
+    // ✦ Desktop: cards tilt toward the cursor with a following spotlight.
+    let cleanupTilt;
+    if (desktop) {
+      const offs = q("[data-tilt]").map((card) => {
+        gsap.set(card, { transformPerspective: 1200 });
+        const rx = gsap.quickTo(card, "rotationX", {
+          duration: 0.6,
+          ease: "power3.out",
+        });
+        const ry = gsap.quickTo(card, "rotationY", {
+          duration: 0.6,
+          ease: "power3.out",
+        });
+        const light = card.querySelector("[data-spotlight]");
+        // Big (featured / expanded) cards tilt less so text stays readable.
+        const max = () => (card.offsetHeight > 600 ? 2.5 : 6);
+
+        const move = (e) => {
+          const r = card.getBoundingClientRect();
+          const px = (e.clientX - r.left) / r.width;
+          const py = (e.clientY - r.top) / r.height;
+          ry((px - 0.5) * 2 * max());
+          rx((0.5 - py) * 2 * max());
+          card.style.setProperty("--mx", `${px * 100}%`);
+          card.style.setProperty("--my", `${py * 100}%`);
+          light.style.opacity = "1";
+        };
+        const leave = () => {
+          rx(0);
+          ry(0);
+          light.style.opacity = "0";
+        };
+
+        card.addEventListener("pointermove", move);
+        card.addEventListener("pointerleave", leave);
+        return () => {
+          card.removeEventListener("pointermove", move);
+          card.removeEventListener("pointerleave", leave);
+        };
+      });
+      cleanupTilt = () => offs.forEach((off) => off());
+    }
+
+    // Project count ticks up.
+    const counter = q("[data-count]")[0];
+    if (counter) {
+      const total = Number(counter.dataset.count);
+      const state = { value: 0 };
+      gsap.to(state, {
+        value: total,
+        duration: 1.2,
+        ease: "power2.out",
+        onUpdate: () => {
+          counter.textContent = String(Math.round(state.value)).padStart(
+            2,
+            "0",
+          );
+        },
+        scrollTrigger: { trigger: counter, start: "top 90%", once: true },
+      });
+    }
+
+    return () => cleanupTilt?.();
+  });
+
   const featuredProjects = projects.filter((project) => project.featured);
   const supportingProjects = projects.filter((project) => !project.featured);
 
   return (
-    <section id="projects" className="w-full py-16 sm:py-24">
+    <section ref={scope} id="projects" className="w-full py-16 sm:py-24">
       <div className="mx-auto max-w-6xl">
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
-          className="mb-12"
-        >
-          <p className="mb-5 flex items-center gap-3 text-xs font-bold tracking-[0.22em] text-cyan-300">
+        <div className="mb-12">
+          <p
+            data-reveal
+            className="mb-5 flex items-center gap-3 text-xs font-bold tracking-[0.22em] text-cyan-300"
+          >
             <span className="h-px w-7 bg-cyan-300" />
             SELECTED WORK
           </p>
 
           <div className="flex items-end justify-between gap-6">
             <div>
-              <h2 className="text-4xl font-semibold leading-[1.08] tracking-tight text-white sm:text-6xl">
+              <h2
+                data-split
+                className="text-4xl font-semibold leading-[1.08] tracking-tight text-white sm:text-6xl"
+              >
                 Built with purpose.
                 <br />
                 <span className="text-gray-500">Engineered with care.</span>
               </h2>
-              <p className="mt-6 max-w-2xl text-sm leading-7 text-gray-400 sm:text-base">
+              <p
+                data-reveal
+                className="mt-6 max-w-2xl text-sm leading-7 text-gray-400 sm:text-base"
+              >
                 A selection of products and engineering work I've contributed
                 to, from full-stack feature development to application stability
                 and security.
               </p>
             </div>
 
-            <div className="hidden shrink-0 text-right sm:block">
-              <p className="text-4xl font-semibold tracking-tight text-cyan-300">
-                05
+            <div data-reveal className="hidden shrink-0 text-right sm:block">
+              <p
+                data-count={projects.length}
+                className="text-4xl font-semibold tabular-nums tracking-tight text-cyan-300"
+              >
+                {String(projects.length).padStart(2, "0")}
               </p>
               <p className="mt-1 text-[10px] tracking-[0.18em] text-gray-500">
                 SELECTED PROJECTS
               </p>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         <div className="space-y-5">
           {featuredProjects.map((project) => (
@@ -394,17 +547,23 @@ export default function Projects() {
 
         <div className="mb-6 mt-16 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <p className="mb-4 flex items-center gap-3 text-xs font-bold tracking-[0.22em] text-cyan-300">
+            <p
+              data-reveal
+              className="mb-4 flex items-center gap-3 text-xs font-bold tracking-[0.22em] text-cyan-300"
+            >
               <span className="h-px w-7 bg-cyan-300" />
               MORE WORK
             </p>
-            <h3 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+            <h3
+              data-split
+              className="text-2xl font-semibold tracking-tight text-white sm:text-3xl"
+            >
               Different problems.{" "}
               <span className="text-gray-500">Same mindset.</span>
             </h3>
           </div>
 
-          <p className="max-w-sm text-sm leading-6 text-gray-500">
+          <p data-reveal className="max-w-sm text-sm leading-6 text-gray-500">
             Three more projects showcasing product thinking, technical range,
             and practical execution.
           </p>
@@ -416,7 +575,10 @@ export default function Projects() {
           ))}
         </div>
 
-        <div className="mt-8 flex items-start gap-4 rounded-2xl border border-cyan-300/10 bg-cyan-300/[0.03] p-5 sm:items-center sm:p-6">
+        <div
+          data-reveal
+          className="mt-8 flex items-start gap-4 rounded-2xl border border-cyan-300/10 bg-cyan-300/[0.03] p-5 sm:items-center sm:p-6"
+        >
           <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-cyan-300/20 text-cyan-300">
             <FiCode className="h-5 w-5" />
           </div>

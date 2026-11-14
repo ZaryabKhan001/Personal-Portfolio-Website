@@ -1,9 +1,8 @@
-
-import React, { useState } from "react";
+import { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 import toast from "react-hot-toast";
 import { FiSend, FiMail, FiMessageSquare } from "react-icons/fi";
-import { motion } from "framer-motion";
+import { useMotion } from "../lib/motion";
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +13,9 @@ const ContactForm = () => {
 
   const [errors, setErrors] = useState({});
   const [isSending, setIsSending] = useState(false);
+
+  const scope = useRef(null);
+  useMotion(scope);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -68,7 +70,7 @@ const ContactForm = () => {
         "service_twmtgeh",
         "template_h7f68f6",
         formData,
-        "Kj3bSdLE-rS69fWsM"
+        "Kj3bSdLE-rS69fWsM",
       );
 
       toast.success("Message sent successfully!");
@@ -92,25 +94,29 @@ const ContactForm = () => {
   const errorClasses = "mt-2 text-sm text-rose-400";
 
   return (
-    <section id="contact" className="w-full max-w-5xl py-24">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.1 }}
-        transition={{ duration: 0.6 }}
-      >
+    <section ref={scope} id="contact" className="w-full max-w-5xl py-24">
+      <div>
         {/* Section heading */}
         <div className="mb-12">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-cyan-400">
+          <p
+            data-reveal
+            className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-cyan-400"
+          >
             Get in touch
           </p>
 
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
+          <h2
+            data-split
+            className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl"
+          >
             Let's build something{" "}
             <span className="text-gray-500">meaningful.</span>
           </h2>
 
-          <p className="mt-5 max-w-2xl text-base leading-7 text-gray-400 sm:text-lg">
+          <p
+            data-reveal
+            className="mt-5 max-w-2xl text-base leading-7 text-gray-400 sm:text-lg"
+          >
             Have an interesting problem, a product idea, or an engineering
             opportunity? I'd love to hear what you're working on.
           </p>
@@ -119,7 +125,10 @@ const ContactForm = () => {
         {/* Contact layout */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[0.8fr_1.2fr]">
           {/* Left information panel */}
-          <div className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+          <div
+            data-reveal
+            className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8"
+          >
             <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl border border-cyan-400/20 bg-cyan-400/10 text-xl text-cyan-400">
               <FiMessageSquare />
             </div>
@@ -129,9 +138,8 @@ const ContactForm = () => {
             </h3>
 
             <p className="mt-3 text-sm leading-7 text-gray-400">
-              I'm interested in solving meaningful problems, collaborating
-              with thoughtful teams, and building products that make a
-              difference.
+              I'm interested in solving meaningful problems, collaborating with
+              thoughtful teams, and building products that make a difference.
             </p>
 
             <div className="mt-8 border-t border-white/10 pt-6">
@@ -156,6 +164,7 @@ const ContactForm = () => {
           <form
             onSubmit={sendEmail}
             noValidate
+            data-reveal
             className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8"
           >
             <div className="mb-6">
@@ -230,9 +239,7 @@ const ContactForm = () => {
                 value={formData.message}
                 onChange={handleChange}
                 aria-invalid={Boolean(errors.message)}
-                aria-describedby={
-                  errors.message ? "message-error" : undefined
-                }
+                aria-describedby={errors.message ? "message-error" : undefined}
                 className={`${inputClasses} resize-y`}
               />
 
@@ -246,7 +253,8 @@ const ContactForm = () => {
             <button
               type="submit"
               disabled={isSending}
-              className="flex w-full items-center justify-center gap-3 rounded-xl bg-cyan-400 px-5 py-4 font-semibold text-gray-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-50"
+              data-magnetic="0.1"
+              className="flex w-full items-center justify-center gap-3 rounded-xl bg-cyan-400 px-5 py-4 font-semibold text-gray-950 transition-colors hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isSending ? "Sending your message..." : "Send Message"}
 
@@ -258,7 +266,7 @@ const ContactForm = () => {
             </p>
           </form>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 };

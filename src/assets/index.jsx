@@ -1,8 +1,4 @@
-import {
-  FaGithub,
-  FaLinkedin,
-  FaX,
-} from "react-icons/fa6";
+import { FaGithub, FaLinkedin, FaX } from "react-icons/fa6";
 
 import { RiReactjsLine } from "react-icons/ri";
 import { FaHtml5 } from "react-icons/fa6";
@@ -17,7 +13,7 @@ export const NAVIGATION_LINKS = [
   { label: "Projects", href: "#projects" },
   { label: "Bio", href: "#bio" },
   { label: "Skills", href: "#skills" },
-  { label: "Education", href: "#education" },
+  { label: "Experience", href: "#experience" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -28,13 +24,12 @@ export const HERO = {
     "I turn complex problems into practical, user-focused solutions. Passionate about building products that scale, writing maintainable code, and turning ideas into reality. Always learning, continuously improving, and exploring how AI can shape the next generation of software.",
 };
 
-
 export const BIO = [
   `I'm a Software Engineer with hands-on experience building and maintaining full-stack applications, turning product requirements into reliable, practical solutions. I care about more than getting features to work — I focus on understanding the problem, making thoughtful engineering decisions, and writing code that's easier to maintain and extend.`,
 
   `My work spans the development lifecycle, from translating requirements into working features to integrating APIs, handling application logic, and solving real-world technical challenges. I've contributed to products ranging from marketplaces and productivity tools to AI-powered applications, gaining a practical understanding of how software serves both users and business goals.`,
 
-  `I'm continuously strengthening my foundations in software design, system architecture, and problem-solving while exploring how AI can make software more useful and capable. I value ownership, clear communication, and continuous improvement, and I'm motivated by opportunities to work on meaningful products alongside engineers who care about building things well.`
+  `I'm continuously strengthening my foundations in software design, system architecture, and problem-solving while exploring how AI can make software more useful and capable. I value ownership, clear communication, and continuous improvement, and I'm motivated by opportunities to work on meaningful products alongside engineers who care about building things well.`,
 ];
 
 export const SKILLS = [
@@ -92,27 +87,43 @@ export const EXPERIENCES = [
   },
 ];
 
-export const EDUCATION = [
+// Newest first. `roles` within a company are also newest first.
+export const EXPERIENCE = [
   {
-    degree: "Bachelor of Science in Information Technology",
-    institution: "University of Gujrat",
-    duration: "2020 - 2024",
-    description:
-      "Specialized in web development, databases, and software engineering. Gained hands-on experience in frontend development and backend integration. Developed a passion for building web applications, with a focus on creating user-friendly interfaces. Currently working as a frontend web developer, specializing in modern web technologies.",
+    company: "Nextbridge",
+    period: "Dec 2024 – Present",
+    type: "Full-time",
+    roles: [
+      {
+        title: "Software Engineer",
+        period: "Mar 2026 – Present",
+        current: true,
+      },
+      {
+        title: "Associate Software Engineer",
+        period: "Mar 2025 – Mar 2026",
+        duration: "1 yr",
+      },
+      {
+        title: "Software Engineering Intern",
+        period: "Dec 2024 – Mar 2025",
+        duration: "3 mos",
+      },
+    ],
   },
   {
-    degree: "Intermediate in Computer Science",
-    institution: "Govt Zamindar College",
-    duration: "2018 - 2020",
-    description:
-      "Developed a strong interest in both computer science and physics. Learned the fundamentals of programming, particularly in C language, which sparked an early interest in coding.",
+    company: "DASH",
+    period: "2023 – 2024",
+    type: "Part-time",
+    duringStudies: true,
+    roles: [{ title: "Frontend Developer", period: "2023 – 2024" }],
   },
   {
-    degree: "Matriculation",
-    institution: "Workers Welfare School Boys Gujrat",
-    duration: "2016 - 2018",
-    description:
-      "Discovered a love for physics, which enhanced problem-solving skills and analytical thinking. Excelled in science subjects, laying a strong foundation for future studies in technology.",
+    company: "Way Developers",
+    period: "2021 – 2023",
+    type: "Part-time",
+    duringStudies: true,
+    roles: [{ title: "Frontend Developer", period: "2021 – 2023" }],
   },
 ];
 
