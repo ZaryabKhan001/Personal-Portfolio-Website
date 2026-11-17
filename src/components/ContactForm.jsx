@@ -1,16 +1,14 @@
 import { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 import toast from "react-hot-toast";
-import { FiSend, FiMail, FiMessageSquare } from "react-icons/fi";
+import { FiArrowRight, FiArrowUpRight } from "react-icons/fi";
+import { CONTACT_NEEDS, SOCIAL_MEDIA_LINKS } from "../assets/index";
 import { useMotion } from "../lib/motion";
 
-const ContactForm = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+const EMPTY = { need: CONTACT_NEEDS[0], name: "", email: "", message: "" };
 
+const ContactForm = () => {
+  const [formData, setFormData] = useState(EMPTY);
   const [errors, setErrors] = useState({});
   const [isSending, setIsSending] = useState(false);
 
@@ -19,44 +17,22 @@ const ContactForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    // Clear the error for the field being edited
-    setErrors((prev) => ({
-      ...prev,
-      [name]: "",
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const validate = () => {
-    const errors = {};
-
-    if (!formData.name.trim()) {
-      errors.name = "Please enter your name.";
-    }
-
-    if (!formData.email.trim()) {
-      errors.email = "Please enter your email.";
-    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-      errors.email = "Please enter a valid email address.";
-    }
-
-    if (!formData.message.trim()) {
-      errors.message = "Please tell me a little about your inquiry.";
-    }
-
-    return errors;
+    const next = {};
+    if (!formData.name.trim()) next.name = "Please enter your name.";
+    if (!formData.email.trim()) next.email = "Please enter your email.";
+    else if (!/^\S+@\S+\.\S+$/.test(formData.email)) next.email = "That email address looks incomplete. Check it and try again.";
+    if (!formData.message.trim()) next.message = "Please add a few words about the project.";
+    return next;
   };
 
   const sendEmail = async (e) => {
     e.preventDefault();
-
     const validationErrors = validate();
-
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
@@ -64,208 +40,153 @@ const ContactForm = () => {
 
     setErrors({});
     setIsSending(true);
-
     try {
+      // The existing EmailJS template reads name, email and message,
+      // so the project type is added to the top of the message.
       await emailjs.send(
         "service_twmtgeh",
         "template_h7f68f6",
-        formData,
+        {
+          name: formData.name,
+          email: formData.email,
+          need: formData.need,
+          message: `What they need: ${formData.need}\n\n${formData.message}`,
+        },
         "Kj3bSdLE-rS69fWsM",
       );
-
-      toast.success("Message sent successfully!");
-      setFormData({
-        name: "",
-        email: "",
-        message: "",
-      });
+      toast.success("Message sent. I'll get back to you soon.");
+      setFormData(EMPTY);
     } catch (error) {
       console.error("Failed to send email:", error);
       toast.error("Couldn't send your message. Please try again.");
-      // Keep the form data so the user doesn't lose their message.
     } finally {
       setIsSending(false);
     }
   };
 
-  const inputClasses =
-    "w-full rounded-xl border border-white/10 bg-[#0d1119] px-4 py-3.5 text-sm text-white placeholder:text-gray-500 outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/10";
-
-  const errorClasses = "mt-2 text-sm text-rose-400";
+  const fieldClasses =
+    "w-full rounded-[10px] border border-line-strong bg-page px-3.5 py-[11px] text-base font-normal text-ink outline-none transition placeholder:text-[#7a869c] focus:border-accent focus:bg-surface focus:ring-4 focus:ring-accent-soft";
+  const errorClasses = "text-sm font-normal text-[#c0262d]";
 
   return (
-    <section ref={scope} id="contact" className="w-full max-w-5xl py-24">
-      <div>
-        {/* Section heading */}
-        <div className="mb-12">
-          <p
-            data-reveal
-            className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-cyan-400"
-          >
-            Get in touch
-          </p>
-
-          <h2
-            data-split
-            className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl"
-          >
-            Let's build something{" "}
-            <span className="text-gray-500">meaningful.</span>
+    <section
+      ref={scope}
+      id="contact"
+      aria-labelledby="contact-title"
+      className="contact-band relative overflow-hidden py-[72px] text-navy-muted md:py-28"
+    >
+      <div className="page grid items-start gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
+        <div className="grid gap-3.5">
+          <span data-reveal className="eyebrow !text-teal-light">Contact</span>
+          <h2 id="contact-title" data-split className="section-title !text-white">
+            Let&apos;s build something that lasts.
           </h2>
-
-          <p
-            data-reveal
-            className="mt-5 max-w-2xl text-base leading-7 text-gray-400 sm:text-lg"
-          >
-            Have an interesting problem, a product idea, or an engineering
-            opportunity? I'd love to hear what you're working on.
+          <p data-reveal className="max-w-[58ch] text-lg">
+            Tell me what you&apos;re building, or what needs fixing. I&apos;ll reply with honest next steps.
           </p>
+
+          <div data-reveal className="mt-7 grid border-t border-white/15">
+            {SOCIAL_MEDIA_LINKS.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between gap-4 border-b border-white/15 py-4 font-semibold text-white transition-all hover:pl-1.5 hover:text-teal-light"
+              >
+                {link.label}
+                <span className="inline-flex items-center gap-1 text-sm font-normal text-navy-muted">
+                  {link.handle} <FiArrowUpRight aria-hidden="true" />
+                </span>
+              </a>
+            ))}
+          </div>
         </div>
 
-        {/* Contact layout */}
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[0.8fr_1.2fr]">
-          {/* Left information panel */}
-          <div
-            data-reveal
-            className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8"
-          >
-            <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl border border-cyan-400/20 bg-cyan-400/10 text-xl text-cyan-400">
-              <FiMessageSquare />
+        <form
+          onSubmit={sendEmail}
+          noValidate
+          data-reveal
+          className="grid gap-[18px] rounded-3xl bg-surface p-[22px] text-ink-body shadow-form sm:p-8"
+        >
+          <p className="text-xl font-bold tracking-[-0.02em] text-ink">Tell me about your project</p>
+
+          <fieldset>
+            <legend className="mb-2 text-sm font-semibold text-ink">What do you need?</legend>
+            <div className="flex flex-wrap gap-2">
+              {CONTACT_NEEDS.map((need) => (
+                <label key={need} className="cursor-pointer">
+                  <input
+                    type="radio"
+                    name="need"
+                    value={need}
+                    checked={formData.need === need}
+                    onChange={handleChange}
+                    className="peer sr-only"
+                  />
+                  <span className="inline-block rounded-full border border-line-strong px-3.5 py-2 text-sm font-medium transition hover:border-accent peer-checked:border-accent peer-checked:bg-accent peer-checked:text-white peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent">
+                    {need}
+                  </span>
+                </label>
+              ))}
             </div>
+          </fieldset>
 
-            <h3 className="text-xl font-semibold text-white">
-              Have a project in mind?
-            </h3>
-
-            <p className="mt-3 text-sm leading-7 text-gray-400">
-              I'm interested in solving meaningful problems, collaborating with
-              thoughtful teams, and building products that make a difference.
-            </p>
-
-            <div className="mt-8 border-t border-white/10 pt-6">
-              <div className="flex items-center gap-3 text-gray-300">
-                <FiMail className="text-lg text-cyan-400" />
-                <span className="text-sm">Send me a message</span>
-              </div>
-
-              <p className="mt-3 text-sm leading-6 text-gray-500">
-                Fill out the form and I'll get back to you as soon as I can.
-              </p>
-            </div>
-
-            <div className="mt-auto pt-10">
-              <p className="font-mono text-xs text-gray-500">
-                OPEN TO INTERESTING CHALLENGES
-              </p>
-            </div>
-          </div>
-
-          {/* Contact form */}
-          <form
-            onSubmit={sendEmail}
-            noValidate
-            data-reveal
-            className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8"
-          >
-            <div className="mb-6">
-              <label
-                htmlFor="name"
-                className="mb-2 block text-sm font-medium text-gray-300"
-              >
-                Your name
-              </label>
-
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label htmlFor="name" className="grid gap-1.5 text-sm font-semibold text-ink">
+              Your name
               <input
-                type="text"
-                name="name"
                 id="name"
-                placeholder="John Doe"
+                name="name"
                 autoComplete="name"
+                placeholder="Jane Smith"
                 value={formData.name}
                 onChange={handleChange}
                 aria-invalid={Boolean(errors.name)}
-                aria-describedby={errors.name ? "name-error" : undefined}
-                className={inputClasses}
+                className={fieldClasses}
               />
-
-              {errors.name && (
-                <p id="name-error" className={errorClasses}>
-                  {errors.name}
-                </p>
-              )}
-            </div>
-
-            <div className="mb-6">
-              <label
-                htmlFor="email"
-                className="mb-2 block text-sm font-medium text-gray-300"
-              >
-                Email address
-              </label>
-
+              {errors.name && <span className={errorClasses}>{errors.name}</span>}
+            </label>
+            <label htmlFor="email" className="grid gap-1.5 text-sm font-semibold text-ink">
+              Work email
               <input
-                type="email"
-                name="email"
                 id="email"
-                placeholder="john@example.com"
+                name="email"
+                type="email"
                 autoComplete="email"
+                placeholder="jane@company.com"
                 value={formData.email}
                 onChange={handleChange}
                 aria-invalid={Boolean(errors.email)}
-                aria-describedby={errors.email ? "email-error" : undefined}
-                className={inputClasses}
+                className={fieldClasses}
               />
+              {errors.email && <span className={errorClasses}>{errors.email}</span>}
+            </label>
+          </div>
 
-              {errors.email && (
-                <p id="email-error" className={errorClasses}>
-                  {errors.email}
-                </p>
-              )}
-            </div>
+          <label htmlFor="message" className="grid gap-1.5 text-sm font-semibold text-ink">
+            About the project
+            <textarea
+              id="message"
+              name="message"
+              rows={5}
+              placeholder="What you're building, where it stands today, and when you'd like to launch."
+              value={formData.message}
+              onChange={handleChange}
+              aria-invalid={Boolean(errors.message)}
+              className={`${fieldClasses} min-h-[120px] resize-y`}
+            />
+            {errors.message && <span className={errorClasses}>{errors.message}</span>}
+          </label>
 
-            <div className="mb-7">
-              <label
-                htmlFor="message"
-                className="mb-2 block text-sm font-medium text-gray-300"
-              >
-                How can I help?
-              </label>
-
-              <textarea
-                name="message"
-                id="message"
-                placeholder="Tell me about your idea, project, or opportunity..."
-                rows={5}
-                value={formData.message}
-                onChange={handleChange}
-                aria-invalid={Boolean(errors.message)}
-                aria-describedby={errors.message ? "message-error" : undefined}
-                className={`${inputClasses} resize-y`}
-              />
-
-              {errors.message && (
-                <p id="message-error" className={errorClasses}>
-                  {errors.message}
-                </p>
-              )}
-            </div>
-
-            <button
-              type="submit"
-              disabled={isSending}
-              data-magnetic="0.1"
-              className="flex w-full items-center justify-center gap-3 rounded-xl bg-cyan-400 px-5 py-4 font-semibold text-gray-950 transition-colors hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {isSending ? "Sending your message..." : "Send Message"}
-
-              {!isSending && <FiSend />}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <small className="text-[13px] text-ink-muted">Your message goes straight to my inbox.</small>
+            <button type="submit" disabled={isSending} data-magnetic="0.1" className="btn btn-primary group disabled:cursor-not-allowed disabled:opacity-60">
+              {isSending ? "Sending…" : "Send message"}
+              {!isSending && <FiArrowRight className="transition-transform group-hover:translate-x-1" />}
             </button>
-
-            <p className="mt-4 text-center text-xs leading-5 text-gray-500">
-              Your message will be sent directly to my inbox.
-            </p>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     </section>
   );
