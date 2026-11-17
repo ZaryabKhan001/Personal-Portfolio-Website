@@ -15,12 +15,15 @@ const CaseStudy = ({ project }) => {
       data-reveal
       className="group grid overflow-hidden rounded-3xl border border-line bg-surface shadow-card transition duration-300 hover:-translate-y-0.5 hover:border-line-strong hover:shadow-card-lg lg:grid-cols-[1.08fr_1fr]"
     >
-      <div className="shot-glow relative flex items-center overflow-hidden bg-gradient-to-br from-accent-soft to-teal-soft pl-6 pt-6 lg:py-9 lg:pl-9">
+      {/* The screenshot fills its whole panel, edge to edge. */}
+      <div className="relative aspect-[16/10] overflow-hidden border-b border-line bg-page lg:aspect-auto lg:min-h-[440px] lg:border-b-0 lg:border-r">
         <img
           src={project.image}
           alt={project.imageAlt}
           loading="lazy"
-          className="relative aspect-[16/10] w-full rounded-tl-xl bg-surface object-cover object-left-top shadow-card-lg transition-transform duration-500 group-hover:scale-[1.02] lg:rounded-l-xl"
+          className={`absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 ${
+            project.imagePosition ?? "object-left-top"
+          }`}
         />
       </div>
 

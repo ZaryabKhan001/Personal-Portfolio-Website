@@ -1,0 +1,106 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ZZ Logo Options</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap">
+<style>
+/* Layout: three stacked concept cards, each showing the mark large, in the header, on navy, and at favicon sizes. Light only, matching the portfolio. */
+:root {
+  color-scheme: light;
+  --bg: #f4f6fb; --surface: #ffffff; --ink: #0b1630; --muted: #56637c; --line: #e2e7f0;
+  --accent: #2447e6; --accent-2: #0891b2; --navy: #0a1433; --on-navy-muted: #b8c3dd; --tab: #dfe4ee;
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-sans); line-height: 1.5; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-block: 56px 80px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { margin: 0; font-size: clamp(30px, 4vw, 44px); letter-spacing: -0.035em; line-height: 1.1; }
+.intro { margin: 12px 0 40px; color: var(--muted); font-size: 18px; max-width: 60ch; }
+.options { display: grid; gap: 24px; }
+.opt { background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 32px; display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 32px; align-items: center; }
+@media (max-width: 760px) { .opt { grid-template-columns: minmax(0, 1fr); padding: 22px; gap: 22px; } }
+.big { width: 200px; height: 200px; max-width: 100%; border-radius: 50px; box-shadow: 0 18px 40px rgba(36, 71, 230, .2); }
+@media (max-width: 760px) { .big { width: 140px; height: 140px; border-radius: 35px; } }
+.tag { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+.opt h2 { margin: 4px 0 6px; font-size: 26px; letter-spacing: -0.02em; }
+.opt p { margin: 0; color: var(--muted); max-width: 56ch; }
+.uses { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 22px; align-items: stretch; }
+.lockup { display: inline-flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); }
+.lockup img { width: 34px; height: 34px; border-radius: 9px; }
+.lockup span { font-size: 18px; font-weight: 700; letter-spacing: -0.03em; white-space: nowrap; }
+.lockup i { font-style: normal; color: var(--accent-2); }
+.lockup.dark { background: var(--navy); border-color: var(--navy); color: #fff; }
+.lockup.dark i { color: #7fdcf0; }
+.fav { display: inline-flex; align-items: center; gap: 14px; padding: 10px 16px; border-radius: 14px; background: var(--bg); border: 1px solid var(--line); }
+.fav img { display: block; }
+.fav small { font-size: 12px; color: var(--muted); }
+.browser { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px 8px 10px; border-radius: 10px 10px 0 0; background: var(--tab); font-size: 13px; color: var(--ink); align-self: flex-end; }
+.browser img { width: 16px; height: 16px; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.tile { display: grid; place-items: center; aspect-ratio: 1; border-radius: 20px; background: var(--bg); border: 1px solid var(--line); }
+.tile img { width: 72%; height: auto; }
+.tile.navy { background: var(--navy); border-color: var(--navy); }
+.opt { grid-template-columns: 280px minmax(0, 1fr) !important; }
+@media (max-width: 760px) { .opt { grid-template-columns: minmax(0, 1fr) !important; } .pair { max-width: 320px; } }
+.lockup img { border-radius: 0 !important; }
+</style>
+
+<div class="wrap">
+  <h1>Logo options for Zaryab Zubair</h1>
+  <p class="intro">Four new directions, none of them a letter in a rounded tile. Each mark is shown on white and on navy, next to your name as in the header, and at favicon sizes (48, 32 and 16 pixels, shown at real size).</p>
+
+  <div class="options">
+    <article class="opt">
+      <div class="pair"><div class="tile"><img src="d-flow-light.svg" alt="Option D logo on white"></div><div class="tile navy"><img src="d-flow-dark.svg" alt="Option D logo on navy"></div></div>
+      <div>
+        <span class="tag">Option D</span>
+        <h2>Flow</h2>
+        <p>Two Zs drawn as one unbroken line, stacked inside a hexagon, with a node at the start and end. It reads as a process flowing from idea to production, and the hexagon gives it a solid, engineered frame.</p>
+        <div class="uses">
+          <span class="lockup"><img src="d-flow-light.svg" alt=""><span>Zaryab Zubair<i>.</i></span></span>
+          <span class="lockup dark"><img src="d-flow-dark.svg" alt=""><span>Zaryab Zubair<i>.</i></span></span>
+          <span class="fav"><img src="d-flow-light.svg" width="48" height="48" alt=""><img src="d-flow-light.svg" width="32" height="32" alt=""><img src="d-flow-light.svg" width="16" height="16" alt=""><small>48 · 32 · 16</small></span>
+        </div>
+      </div>
+    </article>
+    <article class="opt">
+      <div class="pair"><div class="tile"><img src="e-seal-light.svg" alt="Option E logo on white"></div><div class="tile navy"><img src="e-seal-dark.svg" alt="Option E logo on navy"></div></div>
+      <div>
+        <span class="tag">Option E</span>
+        <h2>Monogram seal</h2>
+        <p>A Z and a mirrored Z interlocked into one symmetric monogram, set in a ring like a signet. Classic and senior, the kind of mark a consultancy would use.</p>
+        <div class="uses">
+          <span class="lockup"><img src="e-seal-light.svg" alt=""><span>Zaryab Zubair<i>.</i></span></span>
+          <span class="lockup dark"><img src="e-seal-dark.svg" alt=""><span>Zaryab Zubair<i>.</i></span></span>
+          <span class="fav"><img src="e-seal-light.svg" width="48" height="48" alt=""><img src="e-seal-light.svg" width="32" height="32" alt=""><img src="e-seal-light.svg" width="16" height="16" alt=""><small>48 · 32 · 16</small></span>
+        </div>
+      </div>
+    </article>
+    <article class="opt">
+      <div class="pair"><div class="tile"><img src="f-overlap-light.svg" alt="Option F logo on white"></div><div class="tile navy"><img src="f-overlap-dark.svg" alt="Option F logo on navy"></div></div>
+      <div>
+        <span class="tag">Option F</span>
+        <h2>Overlap</h2>
+        <p>Two bold, slanted Zs overlapping, cobalt and cyan, with the colors mixing where they meet. Confident and modern, like two parts working as one.</p>
+        <div class="uses">
+          <span class="lockup"><img src="f-overlap-light.svg" alt=""><span>Zaryab Zubair<i>.</i></span></span>
+          <span class="lockup dark"><img src="f-overlap-dark.svg" alt=""><span>Zaryab Zubair<i>.</i></span></span>
+          <span class="fav"><img src="f-overlap-light.svg" width="48" height="48" alt=""><img src="f-overlap-light.svg" width="32" height="32" alt=""><img src="f-overlap-light.svg" width="16" height="16" alt=""><small>48 · 32 · 16</small></span>
+        </div>
+      </div>
+    </article>
+    <article class="opt">
+      <div class="pair"><div class="tile"><img src="g-matrix-light.svg" alt="Option G logo on white"></div><div class="tile navy"><img src="g-matrix-dark.svg" alt="Option G logo on navy"></div></div>
+      <div>
+        <span class="tag">Option G</span>
+        <h2>Matrix</h2>
+        <p>ZZ drawn in a grid of dots, like pixels or data points, with the empty grid still faintly visible. The most clearly technical and AI-flavored of the four.</p>
+        <div class="uses">
+          <span class="lockup"><img src="g-matrix-light.svg" alt=""><span>Zaryab Zubair<i>.</i></span></span>
+          <span class="lockup dark"><img src="g-matrix-dark.svg" alt=""><span>Zaryab Zubair<i>.</i></span></span>
+          <span class="fav"><img src="g-matrix-light.svg" width="48" height="48" alt=""><img src="g-matrix-light.svg" width="32" height="32" alt=""><img src="g-matrix-light.svg" width="16" height="16" alt=""><small>48 · 32 · 16</small></span>
+        </div>
+      </div>
+    </article>
+  </div>
+</div>

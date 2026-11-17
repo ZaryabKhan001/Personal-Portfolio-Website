@@ -36,6 +36,7 @@ export const PROJECTS = [
   {
     image: project01,
     imageAlt: "ADGM real estate platform home page",
+    imagePosition: "object-left",
     kind: "client",
     who: "Abu Dhabi Global Market · Real estate",
     title: "Upgrading a live real estate platform without disrupting it",

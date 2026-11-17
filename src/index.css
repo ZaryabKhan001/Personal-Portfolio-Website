@@ -82,20 +82,6 @@ body {
     linear-gradient(160deg, #13235a, #0a1433);
 }
 
-/* Case-study screenshot panel glow. */
-.shot-glow::before {
-  content: "";
-  position: absolute;
-  width: 70%;
-  aspect-ratio: 1;
-  right: -20%;
-  bottom: -40%;
-  border-radius: 50%;
-  background: linear-gradient(120deg, #2447e6, #06b6d4);
-  opacity: 0.22;
-  filter: blur(30px);
-}
-
 details > summary {
   list-style: none;
 }
